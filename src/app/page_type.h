@@ -1,0 +1,13 @@
+#ifndef PAGE_TYPE_H
+#define PAGE_TYPE_H
+
+enum PageType {
+  PAGE_INIT = 0,
+  PAGE_NETWORK_SETUP = 1,
+  PAGE_REAL_TIME_WEATHER = 2,
+  PAGE_FUTURE_WEATHER = 3,
+  PAGE_THEME_SETTINGS = 4,
+  PAGE_FACTORY_RESET = 5
+};
+
+#endif  // PAGE_TYPE_H
