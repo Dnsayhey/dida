@@ -2,7 +2,7 @@
 
 一个基于 `AirM2M Core ESP32-C3 + Arduino + LVGL + ST7789` 的小屏天气设备项目。
 
-当前项目已经完成一轮主体架构重构：入口变薄，硬件参数、硬件能力、应用流程、页面系统和天气展示数据入口已经拆到相对清晰的模块里。代码仍在继续产品化整理，但主流程已经可以编译、烧录并在实机上显示中文天气页面。
+主流程已经可以编译、烧录并在实机上显示中文天气页面。项目面向无触摸屏的小屏设备，交互围绕单个实体按钮设计。
 
 ## 项目概览
 
@@ -74,7 +74,7 @@
 上电后主要流程如下：
 
 1. `setup()` 初始化串口并调用 `AppRuntime::begin()`
-2. `AppRuntime::begin()` 初始化应用状态、开发默认配置和显示设备
+2. `AppRuntime::begin()` 初始化应用状态和显示设备；如果启用 `DEV_MODE`，会额外注入本地开发默认配置
 3. 创建 `lvgl_task`
    负责页面初始化、按钮轮询、背光任务和 LVGL timer
 4. 创建 `init_and_api_task`
@@ -167,13 +167,13 @@ pio device monitor
 
 ### 开发模式
 
-[platformio.ini](/Users/yanlei/Projects/c/dida/platformio.ini:1) 当前启用了：
+[platformio.ini](/Users/yanlei/Projects/c/dida/platformio.ini:1) 默认没有启用 `DEV_MODE`。如果需要在开发烧录时自动补充默认 Wi-Fi 和城市配置，可以临时取消下面这行注释：
 
 ```ini
 -D DEV_MODE=1
 ```
 
-启动时会通过 `DeviceConfigProvider` 应用开发默认配置。当前策略是只为缺失项补默认值，不无条件覆盖已存在的设备配置。
+启用后，启动时会通过 `DeviceConfigProvider` 应用开发默认配置。当前策略是只为缺失项补默认值，不无条件覆盖已存在的设备配置。
 
 开发默认 Wi-Fi 和城市可复制 [include/dev_config_local.example.h](/Users/yanlei/Projects/c/dida/include/dev_config_local.example.h:1) 为被 Git 忽略的 `include/dev_config_local.h`。如果本地未配置这些值，`DEV_MODE` 会跳过空默认值，设备会进入 SoftAP 配网页。
 
@@ -197,20 +197,18 @@ LVGL 默认 Montserrat 字体不覆盖中文。项目当前使用 [src/sources/f
 
 新增静态中文文案时，需要同步更新字库字符表并重新生成字体。生成命令记录在 [src/sources/font/font_convert.md](/Users/yanlei/Projects/c/dida/src/sources/font/font_convert.md:1)。
 
-## 当前完成度
+## 当前状态
 
-主体架构重构已经完成：
+当前已经可用：
 
-- 入口、应用流程、硬件能力、页面系统和天气展示数据入口已经拆开
 - 页面样式已经统一成适配 240x320 无触摸屏的中文卡片风格
-- 天气同步、中文显示、按钮切页和背光模式切换已经可用
+- SoftAP 配网、天气同步、中文显示、按钮切页、亮度模式和明暗主题已经可用
+- 恢复出厂页已支持长按清理 NVS
 
 仍需继续产品化：
 
-- SoftAP 配网已可保存 Wi-Fi 和天气位置
-- 恢复出厂页已支持长按清理 NVS
 - 天气同步状态还不能区分网络失败、解析失败和无数据
-- `DEV_MODE` 和正式配网体验仍需进一步收口
+- 配网失败后的设备端反馈和重试入口还可以继续优化
 - 当前还没有自动测试用例
 
 ## 相关文档
