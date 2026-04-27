@@ -6,8 +6,8 @@
 typedef struct CityLookup {
   String name;  // 城市名称
   String id;    // location id
-  String lat;   // 经度
-  String lon;   // 纬度
+  String lat;   // 纬度
+  String lon;   // 经度
 } CityLookup;
 
 typedef struct WeatherNow {
@@ -32,6 +32,13 @@ typedef struct WeatherDaily {
   String iconNight;  // 夜间天气图标
   String textNight;  // 夜间天气描述
 } WeatherDaily;
+
+typedef struct AirQualityNow {
+  String aqi;                 // 空气质量指数
+  String category;            // 空气质量等级
+  String primaryPollutant;    // 首要污染物
+  String pm2p5;               // PM2.5 浓度
+} AirQualityNow;
 
 enum class WeatherSyncStatus {
   Idle,

@@ -53,6 +53,26 @@ void DeviceConfigProvider::setLocationId(const String& locationId) {
   ConfigManager::getInstance().setLocationID(locationId);
 }
 
+bool DeviceConfigProvider::isLocationCoordinateConfigured() const {
+  ConfigManager& config = ConfigManager::getInstance();
+  return !config.getLocationLat().isEmpty() && !config.getLocationLon().isEmpty();
+}
+
+String DeviceConfigProvider::getLocationLatitude() const {
+  return ConfigManager::getInstance().getLocationLat();
+}
+
+String DeviceConfigProvider::getLocationLongitude() const {
+  return ConfigManager::getInstance().getLocationLon();
+}
+
+void DeviceConfigProvider::setLocationCoordinate(const String& latitude,
+                                                const String& longitude) {
+  ConfigManager& config = ConfigManager::getInstance();
+  config.setLocationLat(latitude);
+  config.setLocationLon(longitude);
+}
+
 void DeviceConfigProvider::saveProvisionedConfig(
     const DeviceConfigSnapshot& configSnapshot) {
   ConfigManager& config = ConfigManager::getInstance();
@@ -61,6 +81,8 @@ void DeviceConfigProvider::saveProvisionedConfig(
   config.setAdm(configSnapshot.adm);
   config.setLocation(configSnapshot.location);
   config.setLocationID("");
+  config.setLocationLat("");
+  config.setLocationLon("");
 }
 
 void DeviceConfigProvider::applyDevDefaults() {

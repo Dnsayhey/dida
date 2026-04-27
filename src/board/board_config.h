@@ -19,6 +19,7 @@ constexpr const char* PROVISIONING_AP_PASSWORD = "12345678";
 constexpr unsigned long BACKLIGHT_INTERVAL_MS = 3000;
 constexpr unsigned long NTP_SYNC_INTERVAL_MS = 1000UL * 60 * 60;
 constexpr unsigned long WEATHER_NOW_INTERVAL_MS = 1000UL * 60 * 60 * 2;
+constexpr unsigned long AIR_QUALITY_NOW_INTERVAL_MS = 1000UL * 60 * 60 * 2;
 constexpr unsigned long WEATHER_7D_INTERVAL_MS = 1000UL * 60 * 60 * 12;
 constexpr unsigned long TASK_LOG_INTERVAL_MS = 1000UL * 60 * 5;
 constexpr unsigned long TIME_LOG_INTERVAL_MS = 1000UL * 60 * 5;

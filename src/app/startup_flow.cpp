@@ -10,9 +10,10 @@ void StartupFlow::run(DisplayDevice& displayDevice, PageManager& pageManager) {
       connectToWifiWithProvisioning(displayDevice, pageManager);
 
   AppController::getInstance().handleDataSyncing();
-  String locationId =
-      _weatherDataSync.ensureLocationId(configSnapshot, _configProvider);
-  _weatherTaskRegistrar.registerTasks(locationId, _weatherDataSync);
+  _weatherDataSync.ensureLocation(configSnapshot, _configProvider);
+  _weatherTaskRegistrar.registerTasks(
+      _configProvider.getLocationId(), _configProvider.getLocationLatitude(),
+      _configProvider.getLocationLongitude(), _weatherDataSync);
   AppController::getInstance().handleWeatherReady();
   switchToWeatherPage(displayDevice, pageManager);
 }

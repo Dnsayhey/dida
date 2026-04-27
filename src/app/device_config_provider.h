@@ -18,6 +18,10 @@ class DeviceConfigProvider {
   bool isLocationIdConfigured() const;
   String getLocationId() const;
   void setLocationId(const String& locationId);
+  bool isLocationCoordinateConfigured() const;
+  String getLocationLatitude() const;
+  String getLocationLongitude() const;
+  void setLocationCoordinate(const String& latitude, const String& longitude);
   void saveProvisionedConfig(const DeviceConfigSnapshot& configSnapshot);
   void applyDevDefaults();
   void factoryReset();

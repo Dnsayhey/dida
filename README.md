@@ -19,7 +19,7 @@
 - 读取本地 NVS 配置
 - 无 Wi-Fi 配置时启动 SoftAP 配网页
 - 自动连接已保存的 Wi-Fi
-- 通过和风天气 API 获取实时天气和 7 日天气
+- 通过和风天气 API 获取实时天气、实时空气质量和 7 日天气
 - 通过 NTP 同步时间
 - 单按键完成天气页、亮度与主题页、恢复出厂页之间的切换
 - 根据光敏传感器自动调节背光
@@ -160,6 +160,7 @@ pio device monitor
 - 地区信息 `adm`
 - 位置名称 `location`
 - 和风天气位置 ID `location_id`
+- 位置经纬度 `location_lat` / `location_lon`
 - 背光模式
 - 主题模式
 
@@ -186,6 +187,8 @@ pio device monitor
 当前实现里：
 
 - API Base URL 和 API Key 通过 `QWEATHER_API_BASE_URL` / `QWEATHER_API_KEY` 配置
+- 实时天气和 7 日天气使用城市 `location_id`
+- 实时空气质量使用城市查询得到的经纬度
 - 本地开发可复制 [include/weather_config_local.example.h](/Users/yanlei/Projects/c/dida/include/weather_config_local.example.h:1) 为被 Git 忽略的 `include/weather_config_local.h`
 - 返回内容会先解压，再用 `ArduinoJson` 解析
 
@@ -202,7 +205,7 @@ LVGL 默认 Montserrat 字体不覆盖中文。项目当前使用 [src/sources/f
 当前已经可用：
 
 - 页面样式已经统一成适配 240x320 无触摸屏的中文卡片风格
-- SoftAP 配网、天气同步、中文显示、按钮切页、亮度模式和明暗主题已经可用
+- SoftAP 配网、天气同步、空气质量、中文显示、按钮切页、亮度模式和明暗主题已经可用
 - 恢复出厂页已支持长按清理 NVS
 
 仍需继续产品化：

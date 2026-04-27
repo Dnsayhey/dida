@@ -5,6 +5,8 @@
 #include "weather_data_sync.h"
 
 void WeatherTaskRegistrar::registerTasks(const String& locationId,
+                                         const String& latitude,
+                                         const String& longitude,
                                          WeatherDataSync& weatherDataSync) {
   TaskManager::getInstance().addTask(
       []() { configTime(8 * 3600, 0, "ntp5.aliyun.com"); },
@@ -14,6 +16,11 @@ void WeatherTaskRegistrar::registerTasks(const String& locationId,
         weatherDataSync.syncCurrentConditions(locationId);
       },
       BoardConfig::WEATHER_NOW_INTERVAL_MS, "WeatherNowTask", true);
+  TaskManager::getInstance().addTask(
+      [latitude, longitude, &weatherDataSync]() {
+        weatherDataSync.syncAirQualityNow(latitude, longitude);
+      },
+      BoardConfig::AIR_QUALITY_NOW_INTERVAL_MS, "AirQualityNowTask", true);
   TaskManager::getInstance().addTask(
       [locationId, &weatherDataSync]() {
         weatherDataSync.syncDailyForecast(locationId);

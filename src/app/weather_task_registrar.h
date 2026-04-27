@@ -7,7 +7,8 @@ class WeatherDataSync;
 
 class WeatherTaskRegistrar {
  public:
-  void registerTasks(const String& locationId, WeatherDataSync& weatherDataSync);
+  void registerTasks(const String& locationId, const String& latitude,
+                     const String& longitude, WeatherDataSync& weatherDataSync);
 };
 
 #endif  // WEATHER_TASK_REGISTRAR_H

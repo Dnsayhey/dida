@@ -146,6 +146,26 @@ String ConfigManager::getLocationID() const {
 
 bool ConfigManager::isLocationIDSet() const { return hasKey(LOCATION_ID_KEY); }
 
+void ConfigManager::setLocationLat(const String& latitude) {
+  setString(LOCATION_LAT_KEY, latitude);
+}
+
+String ConfigManager::getLocationLat() const {
+  return getString(LOCATION_LAT_KEY);
+}
+
+bool ConfigManager::isLocationLatSet() const { return hasKey(LOCATION_LAT_KEY); }
+
+void ConfigManager::setLocationLon(const String& longitude) {
+  setString(LOCATION_LON_KEY, longitude);
+}
+
+String ConfigManager::getLocationLon() const {
+  return getString(LOCATION_LON_KEY);
+}
+
+bool ConfigManager::isLocationLonSet() const { return hasKey(LOCATION_LON_KEY); }
+
 void ConfigManager::setBacklightMode(int mode) {
   setInt(BACKLIGHT_MODE_KEY, mode);
 }

@@ -44,6 +44,12 @@ String weatherApiUrl(const char* path, const String& query) {
          Request::urlEncode(QWEATHER_API_KEY) + query;
 }
 
+String airQualityApiUrl(const String& latitude, const String& longitude) {
+  return String(QWEATHER_API_BASE_URL) + "/airquality/v1/current/" +
+         Request::urlEncode(latitude) + "/" + Request::urlEncode(longitude) +
+         "?key=" + Request::urlEncode(QWEATHER_API_KEY);
+}
+
 bool parseCompressedJson(const String& json, JsonDocument& doc,
                          const char* responseName) {
   uint8_t* compressed = (uint8_t*)json.c_str();
@@ -227,4 +233,71 @@ bool WeatherService::parseWeather7DaysResp(String json,
   Serial.printf("[WeatherService] weather7Days has no data: %s\n",
                 apiCodeMessage(doc).c_str());
   return false;
+}
+
+WeatherSyncResult WeatherService::updateAirQualityNow(const String& latitude,
+                                                      const String& longitude) {
+  _airQualityNowSyncResult = syncingResult();
+  if (!isWeatherApiConfigured()) {
+    _airQualityNowSyncResult = weatherApiConfigMissingResult();
+    Serial.println("[WeatherService] Weather API config missing");
+    return _airQualityNowSyncResult;
+  }
+
+  if (latitude.isEmpty() || longitude.isEmpty()) {
+    _airQualityNowSyncResult = failedResult("Location coordinate missing");
+    Serial.println("[WeatherService] Location coordinate missing");
+    return _airQualityNowSyncResult;
+  }
+
+  Request::Response response =
+      Request::getInstance().get(airQualityApiUrl(latitude, longitude));
+  if (!response.success) {
+    _airQualityNowSyncResult = failedResult(response.error);
+    Serial.printf("[WeatherService] Failed to update airQualityNow: %s\n",
+                  response.error.c_str());
+    return _airQualityNowSyncResult;
+  }
+  if (!parseAirQualityNowResp(response.body, _airQualityNow)) {
+    _airQualityNowSyncResult =
+        failedResult("Failed to parse airQualityNow response");
+    Serial.println("[WeatherService] Failed to parse airQualityNow response");
+    return _airQualityNowSyncResult;
+  }
+  _airQualityNowSyncResult = readyResult();
+  return _airQualityNowSyncResult;
+}
+
+bool WeatherService::parseAirQualityNowResp(String json,
+                                            AirQualityNow& airQualityNow) {
+  JsonDocument doc;
+  if (!parseCompressedJson(json, doc, "airQualityNow")) {
+    return false;
+  }
+
+  JsonObject index = doc["indexes"][0];
+  if (index.isNull()) {
+    Serial.println("[WeatherService] airQualityNow indexes empty");
+    return false;
+  }
+
+  airQualityNow.aqi = index["aqiDisplay"].as<String>();
+  if (airQualityNow.aqi.isEmpty()) {
+    airQualityNow.aqi = index["aqi"].as<String>();
+  }
+  airQualityNow.category = index["category"].as<String>();
+  airQualityNow.primaryPollutant = index["primaryPollutant"]["name"].as<String>();
+  airQualityNow.pm2p5 = "";
+
+  JsonArray pollutants = doc["pollutants"];
+  for (JsonObject pollutant : pollutants) {
+    String code = pollutant["code"].as<String>();
+    String name = pollutant["name"].as<String>();
+    if (code == "pm2p5" || name == "PM2.5" || name == "细颗粒物") {
+      airQualityNow.pm2p5 = pollutant["concentration"]["value"].as<String>();
+      break;
+    }
+  }
+
+  return !airQualityNow.aqi.isEmpty() || !airQualityNow.category.isEmpty();
 }

@@ -15,9 +15,61 @@ bool hasDailyForecast(const WeatherDaily& weather) {
   return !weather.fxDate.isEmpty() && !weather.textDay.isEmpty();
 }
 
+bool hasAirQuality(const AirQualityNow& airQualityNow) {
+  return !airQualityNow.aqi.isEmpty() || !airQualityNow.category.isEmpty();
+}
+
 String formatCurrentConditions(const WeatherNow& weatherNow) {
   return weatherNow.text + " " + weatherNow.temp + "℃" + "\n" +
          weatherNow.windDir + " " + weatherNow.windScale + "级";
+}
+
+String formatTemperature(const WeatherNow& weatherNow) {
+  return weatherNow.temp.isEmpty() ? "--℃" : weatherNow.temp + "℃";
+}
+
+String formatFeelsLike(const WeatherNow& weatherNow) {
+  return weatherNow.feelsLike.isEmpty() ? "体感 --℃"
+                                        : "体感 " + weatherNow.feelsLike + "℃";
+}
+
+String formatHumidity(const WeatherNow& weatherNow) {
+  return weatherNow.humidity.isEmpty() ? "湿度 --%"
+                                       : "湿度 " + weatherNow.humidity + "%";
+}
+
+String formatWind(const WeatherNow& weatherNow) {
+  if (weatherNow.windDir.isEmpty() && weatherNow.windScale.isEmpty()) {
+    return "风力 --";
+  }
+  return weatherNow.windDir + " " + weatherNow.windScale + "级";
+}
+
+String formatVisibility(const WeatherNow& weatherNow) {
+  return weatherNow.vis.isEmpty() ? "能见度 --km"
+                                  : "能见度 " + weatherNow.vis + "km";
+}
+
+String formatAirQuality(const AirQualityNow& airQualityNow) {
+  if (!hasAirQuality(airQualityNow)) {
+    return "空气质量 --";
+  }
+
+  String text = "空气质量 ";
+  if (!airQualityNow.aqi.isEmpty()) {
+    text += airQualityNow.aqi;
+  }
+  if (!airQualityNow.category.isEmpty()) {
+    text += " " + airQualityNow.category;
+  }
+  return text;
+}
+
+String formatPm2p5(const AirQualityNow& airQualityNow) {
+  if (airQualityNow.pm2p5.isEmpty()) {
+    return "PM2.5 --";
+  }
+  return "PM2.5 " + airQualityNow.pm2p5;
 }
 
 String formatDailyForecast(const WeatherDaily& weather) {
@@ -56,14 +108,26 @@ String getDailyForecastStatusText(const WeatherSyncResult& syncResult) {
 CurrentWeatherViewData WeatherViewDataProvider::getCurrentWeatherViewData()
     const {
   WeatherNow weatherNow = _weatherDataClient.getCurrentConditions();
+  AirQualityNow airQualityNow = _weatherDataClient.getAirQualityNow();
   WeatherSyncResult syncResult =
       _weatherDataClient.getCurrentConditionsSyncResult();
   bool hasData = hasCurrentConditions(weatherNow);
+  bool hasAirQualityData = hasAirQuality(airQualityNow);
   String statusText = getCurrentWeatherStatusText(syncResult);
   String conditionsText =
       hasData ? formatCurrentConditions(weatherNow) : statusText;
 
-  return {_configProvider.getLocationName(), conditionsText, hasData,
+  return {_configProvider.getLocationName(), conditionsText,
+          weatherNow.text,
+          formatTemperature(weatherNow),
+          formatFeelsLike(weatherNow),
+          formatHumidity(weatherNow),
+          formatWind(weatherNow),
+          formatVisibility(weatherNow),
+          formatAirQuality(airQualityNow),
+          formatPm2p5(airQualityNow),
+          hasData,
+          hasAirQualityData,
           statusText};
 }
 

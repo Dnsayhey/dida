@@ -8,10 +8,12 @@
 
 class WeatherDataSync {
  public:
-  String ensureLocationId(const DeviceConfigSnapshot& configSnapshot,
-                          DeviceConfigProvider& configProvider);
+  void ensureLocation(const DeviceConfigSnapshot& configSnapshot,
+                      DeviceConfigProvider& configProvider);
   WeatherSyncResult syncCurrentConditions(const String& locationId);
   WeatherSyncResult syncDailyForecast(const String& locationId);
+  WeatherSyncResult syncAirQualityNow(const String& latitude,
+                                      const String& longitude);
 
  private:
   WeatherDataClient _weatherDataClient;

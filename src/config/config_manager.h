@@ -9,6 +9,8 @@
 #define ADM_KEY "adm"
 #define LOCATION_KEY "loc"
 #define LOCATION_ID_KEY "loc_id"
+#define LOCATION_LAT_KEY "loc_lat"
+#define LOCATION_LON_KEY "loc_lon"
 #define BACKLIGHT_MODE_KEY "blm"
 #define THEME_MODE_KEY "theme"
 
@@ -35,6 +37,14 @@ class ConfigManager {
   void setLocationID(const String& location_id);
   bool isLocationIDSet() const;
   String getLocationID() const;
+
+  void setLocationLat(const String& latitude);
+  bool isLocationLatSet() const;
+  String getLocationLat() const;
+
+  void setLocationLon(const String& longitude);
+  bool isLocationLonSet() const;
+  String getLocationLon() const;
 
   void setBacklightMode(int mode);
   bool isBacklightModeSet() const;

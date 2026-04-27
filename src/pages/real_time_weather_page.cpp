@@ -11,8 +11,9 @@ constexpr uint32_t kClockRefreshMs = 200;
 constexpr uint32_t kWeatherRefreshMs = 60UL * 1000;
 
 constexpr lv_coord_t kPanelWidth = 212;
-constexpr lv_coord_t kHeaderPanelHeight = 82;
-constexpr lv_coord_t kWeatherPanelHeight = 104;
+constexpr lv_coord_t kHeaderPanelHeight = 78;
+constexpr lv_coord_t kWeatherPanelHeight = 118;
+constexpr lv_coord_t kAirPanelHeight = 58;
 
 }
 
@@ -22,29 +23,48 @@ void RealTimeWeatherPage::create() {
   pageObject = createTransparentPage();
 
   headerPanel = createCardPanel(kPanelWidth, kHeaderPanelHeight);
-  lv_obj_align(headerPanel, LV_ALIGN_TOP_MID, 0, 12);
+  lv_obj_align(headerPanel, LV_ALIGN_TOP_MID, 0, 10);
 
   districtLabel = createPageLabel(&provice_city_district_32);
   CurrentWeatherViewData weatherViewData =
       _weatherViewDataProvider.getCurrentWeatherViewData();
   lv_label_set_text(districtLabel, weatherViewData.locationName.c_str());
-  lv_obj_align(districtLabel, LV_ALIGN_TOP_MID, 0, 18);
+  lv_obj_align(districtLabel, LV_ALIGN_TOP_MID, 0, 16);
 
   dateLabel = createPageLabel();
-  lv_obj_align(dateLabel, LV_ALIGN_TOP_MID, 0, 54);
+  lv_obj_align(dateLabel, LV_ALIGN_TOP_MID, 0, 50);
 
   timeLabel = createPageLabel(&lv_font_montserrat_24);
   lv_obj_set_style_text_letter_space(timeLabel, 2, 0);
-  lv_obj_align(timeLabel, LV_ALIGN_CENTER, 0, -18);
+  lv_obj_align(timeLabel, LV_ALIGN_TOP_MID, 0, 94);
 
   weatherPanel = createCardPanel(kPanelWidth, kWeatherPanelHeight);
-  lv_obj_align(weatherPanel, LV_ALIGN_BOTTOM_MID, 0, -18);
+  lv_obj_align(weatherPanel, LV_ALIGN_TOP_MID, 0, 126);
 
   weatherLabel = createPageLabel();
-  lv_obj_align(weatherLabel, LV_ALIGN_BOTTOM_MID, 0, -58);
+  lv_obj_align(weatherLabel, LV_ALIGN_TOP_MID, 0, 136);
+
+  temperatureLabel = createPageLabel(&lv_font_montserrat_24);
+  lv_obj_align(temperatureLabel, LV_ALIGN_TOP_MID, 0, 164);
+
+  detailLabel = createPageLabel();
+  lv_obj_set_style_text_align(detailLabel, LV_TEXT_ALIGN_LEFT, 0);
+  lv_obj_set_width(detailLabel, 188);
+  lv_obj_align(detailLabel, LV_ALIGN_TOP_MID, 0, 198);
+
+  airPanel = createCardPanel(kPanelWidth, kAirPanelHeight);
+  lv_obj_align(airPanel, LV_ALIGN_BOTTOM_MID, 0, -10);
+
+  airQualityLabel = createPageLabel();
+  lv_obj_set_width(airQualityLabel, 188);
+  lv_obj_align(airQualityLabel, LV_ALIGN_BOTTOM_MID, 0, -44);
+
+  pm2p5Label = createPageLabel();
+  lv_obj_set_width(pm2p5Label, 188);
+  lv_obj_align(pm2p5Label, LV_ALIGN_BOTTOM_MID, 0, -20);
 
   weatherStatusLabel = createPageLabel();
-  lv_obj_align(weatherStatusLabel, LV_ALIGN_BOTTOM_MID, 0, -28);
+  lv_obj_align(weatherStatusLabel, LV_ALIGN_BOTTOM_MID, 0, -4);
 
   clockUpdateTimer = lv_timer_create(
       [](lv_timer_t* timer) {
@@ -108,7 +128,19 @@ void RealTimeWeatherPage::updateWeather() {
   CurrentWeatherViewData weatherViewData =
       _weatherViewDataProvider.getCurrentWeatherViewData();
   lv_label_set_text(weatherLabel,
-                    weatherViewData.conditionsText.c_str());
+                    weatherViewData.hasData ? weatherViewData.weatherText.c_str()
+                                            : weatherViewData.conditionsText.c_str());
+  lv_label_set_text(temperatureLabel, weatherViewData.temperatureText.c_str());
+
+  String detailText = weatherViewData.feelsLikeText + "  " +
+                      weatherViewData.humidityText + "\n" +
+                      weatherViewData.windText + "  " +
+                      weatherViewData.visibilityText;
+  lv_label_set_text(detailLabel, detailText.c_str());
+
+  lv_label_set_text(airQualityLabel, weatherViewData.airQualityText.c_str());
+  lv_label_set_text(pm2p5Label, weatherViewData.pm2p5Text.c_str());
+
   if (weatherViewData.statusText.isEmpty()) {
     lv_label_set_text(weatherStatusLabel, "");
     lv_obj_add_flag(weatherStatusLabel, LV_OBJ_FLAG_HIDDEN);

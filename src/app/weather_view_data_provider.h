@@ -10,7 +10,16 @@
 struct CurrentWeatherViewData {
   String locationName;
   String conditionsText;
+  String weatherText;
+  String temperatureText;
+  String feelsLikeText;
+  String humidityText;
+  String windText;
+  String visibilityText;
+  String airQualityText;
+  String pm2p5Text;
   bool hasData;
+  bool hasAirQualityData;
   String statusText;
 };
 
