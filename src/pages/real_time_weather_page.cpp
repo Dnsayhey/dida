@@ -33,20 +33,16 @@ void RealTimeWeatherPage::create() {
   weatherLabel = createPageLabel();
   lv_obj_align(weatherLabel, LV_ALIGN_TOP_MID, 0, 148);
 
-  detailTopLabel = createPageLabel();
-  lv_obj_set_width(detailTopLabel, 210);
+  detailTopLabel = createSingleLineLabel(210);
   lv_obj_align(detailTopLabel, LV_ALIGN_TOP_MID, 0, 184);
 
-  detailBottomLabel = createPageLabel();
-  lv_obj_set_width(detailBottomLabel, 210);
+  detailBottomLabel = createSingleLineLabel(210);
   lv_obj_align(detailBottomLabel, LV_ALIGN_TOP_MID, 0, 210);
 
-  airQualityLabel = createPageLabel();
-  lv_obj_set_width(airQualityLabel, 188);
+  airQualityLabel = createSingleLineLabel(188);
   lv_obj_align(airQualityLabel, LV_ALIGN_BOTTOM_MID, 0, -50);
 
-  pm2p5Label = createPageLabel();
-  lv_obj_set_width(pm2p5Label, 188);
+  pm2p5Label = createSingleLineLabel(188);
   lv_obj_align(pm2p5Label, LV_ALIGN_BOTTOM_MID, 0, -26);
 
   weatherStatusLabel = createPageLabel();
@@ -83,6 +79,13 @@ lv_obj_t* RealTimeWeatherPage::createPageLabel(const lv_font_t* font) {
     applyUiTextFont(label);
   }
   lv_label_set_text(label, "");
+  return label;
+}
+
+lv_obj_t* RealTimeWeatherPage::createSingleLineLabel(lv_coord_t width) {
+  lv_obj_t* label = createPageLabel();
+  lv_obj_set_size(label, width, 23);
+  lv_label_set_long_mode(label, LV_LABEL_LONG_MODE_DOTS);
   return label;
 }
 
