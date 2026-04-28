@@ -3,6 +3,8 @@
 #include <Arduino.h>  // 包含Arduino头文件，其中包含时间相关定义
 
 #include "WString.h"
+#include "layouts/flex/lv_flex.h"
+#include "layouts/lv_layout.h"
 #include "sources/font/provice_city_district_32.c"
 
 namespace {
@@ -10,40 +12,51 @@ namespace {
 constexpr uint32_t kClockRefreshMs = 200;
 constexpr uint32_t kWeatherRefreshMs = 60UL * 1000;
 
+constexpr lv_coord_t kContentWidth = 216;
+constexpr lv_coord_t kLargeTextHeight = 32;
+constexpr lv_coord_t kTimeTextHeight = 27;
+constexpr lv_coord_t kTextHeight = 23;
+
 }
 
 void RealTimeWeatherPage::create() {
   LV_FONT_DECLARE(provice_city_district_32);
 
   pageObject = createTransparentPage();
+  lv_obj_set_layout(pageObject, LV_LAYOUT_FLEX);
+  lv_obj_set_flex_flow(pageObject, LV_FLEX_FLOW_COLUMN);
+  lv_obj_set_flex_align(pageObject, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_CENTER,
+                        LV_FLEX_ALIGN_CENTER);
+  lv_obj_set_style_pad_top(pageObject, 14, 0);
+  lv_obj_set_style_pad_left(pageObject, 12, 0);
+  lv_obj_set_style_pad_right(pageObject, 12, 0);
+  lv_obj_set_style_pad_row(pageObject, 7, 0);
 
-  districtLabel = createPageLabel(&provice_city_district_32);
+  districtLabel = createSingleLineLabel(kContentWidth, kLargeTextHeight,
+                                        &provice_city_district_32);
   CurrentWeatherViewData weatherViewData =
       _weatherViewDataProvider.getCurrentWeatherViewData();
   lv_label_set_text(districtLabel, weatherViewData.locationName.c_str());
-  lv_obj_align(districtLabel, LV_ALIGN_TOP_MID, 0, 16);
 
-  dateLabel = createPageLabel();
-  lv_obj_align(dateLabel, LV_ALIGN_TOP_MID, 0, 50);
+  dateLabel = createSingleLineLabel(kContentWidth, kTextHeight);
 
-  timeLabel = createPageLabel(&lv_font_montserrat_24);
+  timeLabel = createSingleLineLabel(kContentWidth, kTimeTextHeight,
+                                    &lv_font_montserrat_24);
   lv_obj_set_style_text_letter_space(timeLabel, 2, 0);
-  lv_obj_align(timeLabel, LV_ALIGN_TOP_MID, 0, 94);
+  lv_obj_set_style_margin_top(timeLabel, 16, 0);
 
-  weatherLabel = createPageLabel();
-  lv_obj_align(weatherLabel, LV_ALIGN_TOP_MID, 0, 148);
+  weatherLabel = createSingleLineLabel(kContentWidth, kTextHeight);
+  lv_obj_set_style_margin_top(weatherLabel, 12, 0);
 
-  detailTopLabel = createSingleLineLabel(210);
-  lv_obj_align(detailTopLabel, LV_ALIGN_TOP_MID, 0, 184);
+  detailTopLabel = createSingleLineLabel(kContentWidth, kTextHeight);
+  lv_obj_set_style_margin_top(detailTopLabel, 12, 0);
 
-  detailBottomLabel = createSingleLineLabel(210);
-  lv_obj_align(detailBottomLabel, LV_ALIGN_TOP_MID, 0, 210);
+  detailBottomLabel = createSingleLineLabel(kContentWidth, kTextHeight);
 
-  airQualityLabel = createSingleLineLabel(188);
-  lv_obj_align(airQualityLabel, LV_ALIGN_BOTTOM_MID, 0, -50);
+  airQualityLabel = createSingleLineLabel(kContentWidth, kTextHeight);
+  lv_obj_set_style_margin_top(airQualityLabel, 12, 0);
 
-  pm2p5Label = createSingleLineLabel(188);
-  lv_obj_align(pm2p5Label, LV_ALIGN_BOTTOM_MID, 0, -26);
+  pm2p5Label = createSingleLineLabel(kContentWidth, kTextHeight);
 
   clockUpdateTimer = lv_timer_create(
       [](lv_timer_t* timer) {
@@ -79,9 +92,11 @@ lv_obj_t* RealTimeWeatherPage::createPageLabel(const lv_font_t* font) {
   return label;
 }
 
-lv_obj_t* RealTimeWeatherPage::createSingleLineLabel(lv_coord_t width) {
-  lv_obj_t* label = createPageLabel();
-  lv_obj_set_size(label, width, 23);
+lv_obj_t* RealTimeWeatherPage::createSingleLineLabel(lv_coord_t width,
+                                                     lv_coord_t height,
+                                                     const lv_font_t* font) {
+  lv_obj_t* label = createPageLabel(font);
+  lv_obj_set_size(label, width, height);
   lv_label_set_long_mode(label, LV_LABEL_LONG_MODE_DOTS);
   return label;
 }

@@ -11,7 +11,8 @@ class RealTimeWeatherPage : public BasePage {
 
  private:
   lv_obj_t* createPageLabel(const lv_font_t* font = nullptr);
-  lv_obj_t* createSingleLineLabel(lv_coord_t width);
+  lv_obj_t* createSingleLineLabel(lv_coord_t width, lv_coord_t height,
+                                  const lv_font_t* font = nullptr);
   void updateClock();
   void updateWeather();
 
