@@ -10,6 +10,8 @@
 
 namespace {
 
+constexpr size_t kWeatherDailyCount = 7;
+
 WeatherSyncResult syncingResult() {
   return {WeatherSyncStatus::Syncing, "", millis()};
 }
@@ -163,8 +165,8 @@ bool WeatherService::parseWeatherNowResp(String json, WeatherNow& weatherNow) {
     return false;
   }
 
-  if (isApiCodeOk(doc) && doc["now"].size() > 0) {
-    JsonObject now = doc["now"];
+  JsonObject now = doc["now"];
+  if (isApiCodeOk(doc) && !now.isNull()) {
     weatherNow.temp = now["temp"].as<String>();
     weatherNow.feelsLike = now["feelsLike"].as<String>();
     weatherNow.icon = now["icon"].as<String>();
@@ -216,7 +218,12 @@ bool WeatherService::parseWeather7DaysResp(String json,
 
   if (isApiCodeOk(doc) && doc["daily"].size() > 0) {
     JsonArray daily = doc["daily"];
-    for (int i = 0; i < daily.size(); i++) {
+    size_t dailyCount = daily.size();
+    if (dailyCount > kWeatherDailyCount) {
+      dailyCount = kWeatherDailyCount;
+    }
+
+    for (size_t i = 0; i < dailyCount; i++) {
       JsonObject day = daily[i];
       weather7Days[i].fxDate = day["fxDate"].as<String>();
       weather7Days[i].sunrise = day["sunrise"].as<String>();
@@ -227,6 +234,9 @@ bool WeatherService::parseWeather7DaysResp(String json,
       weather7Days[i].textDay = day["textDay"].as<String>();
       weather7Days[i].iconNight = day["iconNight"].as<String>();
       weather7Days[i].textNight = day["textNight"].as<String>();
+    }
+    for (size_t i = dailyCount; i < kWeatherDailyCount; i++) {
+      weather7Days[i] = WeatherDaily{};
     }
     return true;
   }
