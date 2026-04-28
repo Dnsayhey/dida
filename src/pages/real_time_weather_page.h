@@ -14,14 +14,11 @@ class RealTimeWeatherPage : public BasePage {
   void updateClock();
   void updateWeather();
 
-  lv_obj_t* headerPanel;
-  lv_obj_t* weatherPanel;
   lv_obj_t* districtLabel;
   lv_obj_t* dateLabel;
   lv_obj_t* timeLabel;
   lv_obj_t* weatherLabel;
   lv_obj_t* detailLabel;
-  lv_obj_t* airPanel;
   lv_obj_t* airQualityLabel;
   lv_obj_t* pm2p5Label;
   lv_obj_t* weatherStatusLabel;

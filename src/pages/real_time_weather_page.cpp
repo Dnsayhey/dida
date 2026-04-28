@@ -10,20 +10,12 @@ namespace {
 constexpr uint32_t kClockRefreshMs = 200;
 constexpr uint32_t kWeatherRefreshMs = 60UL * 1000;
 
-constexpr lv_coord_t kPanelWidth = 212;
-constexpr lv_coord_t kHeaderPanelHeight = 78;
-constexpr lv_coord_t kWeatherPanelHeight = 112;
-constexpr lv_coord_t kAirPanelHeight = 58;
-
 }
 
 void RealTimeWeatherPage::create() {
   LV_FONT_DECLARE(provice_city_district_32);
 
   pageObject = createTransparentPage();
-
-  headerPanel = createCardPanel(kPanelWidth, kHeaderPanelHeight);
-  lv_obj_align(headerPanel, LV_ALIGN_TOP_MID, 0, 10);
 
   districtLabel = createPageLabel(&provice_city_district_32);
   CurrentWeatherViewData weatherViewData =
@@ -38,9 +30,6 @@ void RealTimeWeatherPage::create() {
   lv_obj_set_style_text_letter_space(timeLabel, 2, 0);
   lv_obj_align(timeLabel, LV_ALIGN_TOP_MID, 0, 94);
 
-  weatherPanel = createCardPanel(kPanelWidth, kWeatherPanelHeight);
-  lv_obj_align(weatherPanel, LV_ALIGN_TOP_MID, 0, 126);
-
   weatherLabel = createPageLabel();
   lv_obj_align(weatherLabel, LV_ALIGN_TOP_MID, 0, 148);
 
@@ -48,9 +37,6 @@ void RealTimeWeatherPage::create() {
   lv_obj_set_style_text_align(detailLabel, LV_TEXT_ALIGN_LEFT, 0);
   lv_obj_set_width(detailLabel, 188);
   lv_obj_align(detailLabel, LV_ALIGN_TOP_MID, 0, 190);
-
-  airPanel = createCardPanel(kPanelWidth, kAirPanelHeight);
-  lv_obj_align(airPanel, LV_ALIGN_BOTTOM_MID, 0, -16);
 
   airQualityLabel = createPageLabel();
   lv_obj_set_width(airQualityLabel, 188);
