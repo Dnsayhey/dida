@@ -23,7 +23,6 @@ class RealTimeWeatherPage : public BasePage {
   lv_obj_t* detailBottomLabel;
   lv_obj_t* airQualityLabel;
   lv_obj_t* pm2p5Label;
-  lv_obj_t* weatherStatusLabel;
 
   lv_timer_t* clockUpdateTimer;
   lv_timer_t* weatherUpdateTimer;

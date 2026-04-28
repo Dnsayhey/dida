@@ -45,9 +45,6 @@ void RealTimeWeatherPage::create() {
   pm2p5Label = createSingleLineLabel(188);
   lv_obj_align(pm2p5Label, LV_ALIGN_BOTTOM_MID, 0, -26);
 
-  weatherStatusLabel = createPageLabel();
-  lv_obj_align(weatherStatusLabel, LV_ALIGN_TOP_MID, 0, 236);
-
   clockUpdateTimer = lv_timer_create(
       [](lv_timer_t* timer) {
         RealTimeWeatherPage* self =
@@ -131,13 +128,4 @@ void RealTimeWeatherPage::updateWeather() {
 
   lv_label_set_text(airQualityLabel, weatherViewData.airQualityText.c_str());
   lv_label_set_text(pm2p5Label, weatherViewData.pm2p5Text.c_str());
-
-  if (weatherViewData.statusText.isEmpty()) {
-    lv_label_set_text(weatherStatusLabel, "");
-    lv_obj_add_flag(weatherStatusLabel, LV_OBJ_FLAG_HIDDEN);
-    return;
-  }
-
-  lv_label_set_text(weatherStatusLabel, weatherViewData.statusText.c_str());
-  lv_obj_clear_flag(weatherStatusLabel, LV_OBJ_FLAG_HIDDEN);
 }
