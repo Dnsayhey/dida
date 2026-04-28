@@ -12,7 +12,7 @@ constexpr uint32_t kWeatherRefreshMs = 60UL * 1000;
 
 constexpr lv_coord_t kPanelWidth = 212;
 constexpr lv_coord_t kHeaderPanelHeight = 78;
-constexpr lv_coord_t kWeatherPanelHeight = 118;
+constexpr lv_coord_t kWeatherPanelHeight = 112;
 constexpr lv_coord_t kAirPanelHeight = 58;
 
 }
@@ -44,7 +44,7 @@ void RealTimeWeatherPage::create() {
   weatherLabel = createPageLabel();
   lv_obj_align(weatherLabel, LV_ALIGN_TOP_MID, 0, 136);
 
-  temperatureLabel = createPageLabel(&lv_font_montserrat_24);
+  temperatureLabel = createPageLabel();
   lv_obj_align(temperatureLabel, LV_ALIGN_TOP_MID, 0, 164);
 
   detailLabel = createPageLabel();
@@ -53,18 +53,18 @@ void RealTimeWeatherPage::create() {
   lv_obj_align(detailLabel, LV_ALIGN_TOP_MID, 0, 198);
 
   airPanel = createCardPanel(kPanelWidth, kAirPanelHeight);
-  lv_obj_align(airPanel, LV_ALIGN_BOTTOM_MID, 0, -10);
+  lv_obj_align(airPanel, LV_ALIGN_BOTTOM_MID, 0, -16);
 
   airQualityLabel = createPageLabel();
   lv_obj_set_width(airQualityLabel, 188);
-  lv_obj_align(airQualityLabel, LV_ALIGN_BOTTOM_MID, 0, -44);
+  lv_obj_align(airQualityLabel, LV_ALIGN_BOTTOM_MID, 0, -50);
 
   pm2p5Label = createPageLabel();
   lv_obj_set_width(pm2p5Label, 188);
-  lv_obj_align(pm2p5Label, LV_ALIGN_BOTTOM_MID, 0, -20);
+  lv_obj_align(pm2p5Label, LV_ALIGN_BOTTOM_MID, 0, -26);
 
   weatherStatusLabel = createPageLabel();
-  lv_obj_align(weatherStatusLabel, LV_ALIGN_BOTTOM_MID, 0, -4);
+  lv_obj_align(weatherStatusLabel, LV_ALIGN_TOP_MID, 0, 224);
 
   clockUpdateTimer = lv_timer_create(
       [](lv_timer_t* timer) {
