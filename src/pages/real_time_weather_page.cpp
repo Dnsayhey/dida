@@ -33,10 +33,13 @@ void RealTimeWeatherPage::create() {
   weatherLabel = createPageLabel();
   lv_obj_align(weatherLabel, LV_ALIGN_TOP_MID, 0, 148);
 
-  detailLabel = createPageLabel();
-  lv_obj_set_style_text_align(detailLabel, LV_TEXT_ALIGN_LEFT, 0);
-  lv_obj_set_width(detailLabel, 188);
-  lv_obj_align(detailLabel, LV_ALIGN_TOP_MID, 0, 190);
+  detailTopLabel = createPageLabel();
+  lv_obj_set_width(detailTopLabel, 210);
+  lv_obj_align(detailTopLabel, LV_ALIGN_TOP_MID, 0, 184);
+
+  detailBottomLabel = createPageLabel();
+  lv_obj_set_width(detailBottomLabel, 210);
+  lv_obj_align(detailBottomLabel, LV_ALIGN_TOP_MID, 0, 210);
 
   airQualityLabel = createPageLabel();
   lv_obj_set_width(airQualityLabel, 188);
@@ -47,7 +50,7 @@ void RealTimeWeatherPage::create() {
   lv_obj_align(pm2p5Label, LV_ALIGN_BOTTOM_MID, 0, -26);
 
   weatherStatusLabel = createPageLabel();
-  lv_obj_align(weatherStatusLabel, LV_ALIGN_TOP_MID, 0, 224);
+  lv_obj_align(weatherStatusLabel, LV_ALIGN_TOP_MID, 0, 236);
 
   clockUpdateTimer = lv_timer_create(
       [](lv_timer_t* timer) {
@@ -116,11 +119,12 @@ void RealTimeWeatherPage::updateWeather() {
                            : weatherViewData.conditionsText;
   lv_label_set_text(weatherLabel, primaryText.c_str());
 
-  String detailText = weatherViewData.feelsLikeText + "  " +
-                      weatherViewData.humidityText + "\n" +
-                      weatherViewData.windText + "  " +
-                      weatherViewData.visibilityText;
-  lv_label_set_text(detailLabel, detailText.c_str());
+  String detailTopText =
+      weatherViewData.feelsLikeText + "  " + weatherViewData.humidityText;
+  String detailBottomText =
+      weatherViewData.windText + "  " + weatherViewData.visibilityText;
+  lv_label_set_text(detailTopLabel, detailTopText.c_str());
+  lv_label_set_text(detailBottomLabel, detailBottomText.c_str());
 
   lv_label_set_text(airQualityLabel, weatherViewData.airQualityText.c_str());
   lv_label_set_text(pm2p5Label, weatherViewData.pm2p5Text.c_str());
