@@ -17,11 +17,6 @@ void init_and_api_task(void* pvParameters) {
 
 void setup() {
   Serial.begin(115200);
-  while (!Serial && !Serial.available()) {
-  }
-
-  delay(2000);
-
   Serial.println("Setup...");
 
   if (!AppRuntime::getInstance().begin()) {
