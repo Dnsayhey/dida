@@ -42,15 +42,12 @@ void RealTimeWeatherPage::create() {
   lv_obj_align(weatherPanel, LV_ALIGN_TOP_MID, 0, 126);
 
   weatherLabel = createPageLabel();
-  lv_obj_align(weatherLabel, LV_ALIGN_TOP_MID, 0, 136);
-
-  temperatureLabel = createPageLabel();
-  lv_obj_align(temperatureLabel, LV_ALIGN_TOP_MID, 0, 164);
+  lv_obj_align(weatherLabel, LV_ALIGN_TOP_MID, 0, 148);
 
   detailLabel = createPageLabel();
   lv_obj_set_style_text_align(detailLabel, LV_TEXT_ALIGN_LEFT, 0);
   lv_obj_set_width(detailLabel, 188);
-  lv_obj_align(detailLabel, LV_ALIGN_TOP_MID, 0, 198);
+  lv_obj_align(detailLabel, LV_ALIGN_TOP_MID, 0, 190);
 
   airPanel = createCardPanel(kPanelWidth, kAirPanelHeight);
   lv_obj_align(airPanel, LV_ALIGN_BOTTOM_MID, 0, -16);
@@ -127,10 +124,11 @@ void RealTimeWeatherPage::updateClock() {
 void RealTimeWeatherPage::updateWeather() {
   CurrentWeatherViewData weatherViewData =
       _weatherViewDataProvider.getCurrentWeatherViewData();
-  lv_label_set_text(weatherLabel,
-                    weatherViewData.hasData ? weatherViewData.weatherText.c_str()
-                                            : weatherViewData.conditionsText.c_str());
-  lv_label_set_text(temperatureLabel, weatherViewData.temperatureText.c_str());
+  String primaryText = weatherViewData.hasData
+                           ? weatherViewData.weatherText + "  " +
+                                 weatherViewData.temperatureText
+                           : weatherViewData.conditionsText;
+  lv_label_set_text(weatherLabel, primaryText.c_str());
 
   String detailText = weatherViewData.feelsLikeText + "  " +
                       weatherViewData.humidityText + "\n" +

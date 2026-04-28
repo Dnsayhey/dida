@@ -20,7 +20,6 @@ class RealTimeWeatherPage : public BasePage {
   lv_obj_t* dateLabel;
   lv_obj_t* timeLabel;
   lv_obj_t* weatherLabel;
-  lv_obj_t* temperatureLabel;
   lv_obj_t* detailLabel;
   lv_obj_t* airPanel;
   lv_obj_t* airQualityLabel;
