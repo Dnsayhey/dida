@@ -4,17 +4,17 @@
 
 建议阅读顺序如下：
 
-1. [../README.md](/Users/yanlei/Projects/c/dida/README.md:1)
+1. [../README.md](../README.md)
    先看项目总览、构建方式、目录结构和基础说明。
-2. [硬件适配说明.md](/Users/yanlei/Projects/c/dida/docs/硬件适配说明.md:1)
+2. [硬件适配说明.md](./硬件适配说明.md)
    先确认项目当前适配的开发板、屏幕和外设引脚。
-3. [当前实现状态.md](/Users/yanlei/Projects/c/dida/docs/当前实现状态.md:1)
+3. [当前实现状态.md](./当前实现状态.md)
    再看当前软件结构、启动流程、按钮行为和后续优先级。
 
 ## 使用建议
 
 - 想快速上手项目：先看根 `README.md`
-- 想确认硬件绑定信息：看 [硬件适配说明.md](/Users/yanlei/Projects/c/dida/docs/硬件适配说明.md:1)
-- 想知道当前软件结构和运行流程：看 [当前实现状态.md](/Users/yanlei/Projects/c/dida/docs/当前实现状态.md:1)
+- 想确认硬件绑定信息：看 [硬件适配说明.md](./硬件适配说明.md)
+- 想知道当前软件结构和运行流程：看 [当前实现状态.md](./当前实现状态.md)
 
 当前文档刻意保持精简：根 README 负责上手，硬件文档负责板级事实，当前实现状态负责软件结构、运行流程和后续路线。

@@ -57,17 +57,17 @@
 项目当前按职责分成几层：
 
 1. 入口层
-   [src/main.cpp](/Users/yanlei/Projects/c/dida/src/main.cpp:1) 只负责串口初始化、启动 `AppRuntime` 和创建两个 FreeRTOS 任务。
+   [src/main.cpp](./src/main.cpp) 只负责串口初始化、启动 `AppRuntime` 和创建两个 FreeRTOS 任务。
 2. 应用层
-   [src/app](/Users/yanlei/Projects/c/dida/src/app) 负责编排运行时、启动流程、应用状态、按钮命令和页面展示数据。
+   [src/app](./src/app) 负责编排运行时、启动流程、应用状态、按钮命令和页面展示数据。
 3. 固定硬件配置
-   [src/board/board_config.h](/Users/yanlei/Projects/c/dida/src/board/board_config.h:1) 集中保存开发板引脚、Wi-Fi 超时和周期任务间隔等常量。
+   [src/board/board_config.h](./src/board/board_config.h) 集中保存开发板引脚、Wi-Fi 超时和周期任务间隔等常量。
 4. 硬件能力层
-   [src/hardware](/Users/yanlei/Projects/c/dida/src/hardware) 封装显示设备、实体按钮、背光 PWM、光敏读取和光敏背光策略。
+   [src/hardware](./src/hardware) 封装显示设备、实体按钮、背光 PWM、光敏读取和光敏背光策略。
 5. 页面系统
-   [src/pages](/Users/yanlei/Projects/c/dida/src/pages) 负责页面创建、显示隐藏和当前页面内部事件处理。
+   [src/pages](./src/pages) 负责页面创建、显示隐藏和当前页面内部事件处理。
 6. 底层服务
-   [src/config](/Users/yanlei/Projects/c/dida/src/config)、[src/net](/Users/yanlei/Projects/c/dida/src/net)、[src/weather](/Users/yanlei/Projects/c/dida/src/weather)、[src/system](/Users/yanlei/Projects/c/dida/src/system) 分别负责 NVS、网络/HTTP、天气接口和周期任务。
+   [src/config](./src/config)、[src/net](./src/net)、[src/weather](./src/weather)、[src/system](./src/system) 分别负责 NVS、网络/HTTP、天气接口和周期任务。
 
 ## 启动流程
 
@@ -81,7 +81,7 @@
    负责 SoftAP 配网、Wi-Fi 连接、城市 ID 确认、天气/NTP 周期任务注册和启动后页面切换
 5. 周期任务立即执行一次天气同步，然后按配置间隔继续运行
 
-更详细的真实状态见 [docs/当前实现状态.md](/Users/yanlei/Projects/c/dida/docs/当前实现状态.md:1)。
+更详细的真实状态见 [docs/当前实现状态.md](./docs/当前实现状态.md)。
 
 ## 页面说明
 
@@ -105,7 +105,7 @@
 - 长按：
   亮度与主题页切换浅色/深色主题；恢复出厂页执行恢复出厂设置。
 
-完整按钮行为见 [docs/当前实现状态.md](/Users/yanlei/Projects/c/dida/docs/当前实现状态.md:1)。
+完整按钮行为见 [docs/当前实现状态.md](./docs/当前实现状态.md)。
 
 ## 目录结构
 
@@ -143,7 +143,7 @@ pio run -t upload
 pio device monitor
 ```
 
-当前默认环境定义在 [platformio.ini](/Users/yanlei/Projects/c/dida/platformio.ini:1)：
+当前默认环境定义在 [platformio.ini](./platformio.ini)：
 
 - `platform = espressif32@6.6.0`
 - `board = airm2m_core_esp32c3`
@@ -164,11 +164,11 @@ pio device monitor
 - 背光模式
 - 主题模式
 
-底层读写入口是 [src/config/config_manager.h](/Users/yanlei/Projects/c/dida/src/config/config_manager.h:1)。应用层代码优先通过 `app/DeviceConfigProvider` 和 `app/DeviceSettingsStore` 访问这些配置语义。
+底层读写入口是 [src/config/config_manager.h](./src/config/config_manager.h)。应用层代码优先通过 `app/DeviceConfigProvider` 和 `app/DeviceSettingsStore` 访问这些配置语义。
 
 ### 开发模式
 
-[platformio.ini](/Users/yanlei/Projects/c/dida/platformio.ini:1) 默认没有启用 `DEV_MODE`。如果需要在开发烧录时自动补充默认 Wi-Fi 和城市配置，可以临时取消下面这行注释：
+[platformio.ini](./platformio.ini) 默认没有启用 `DEV_MODE`。如果需要在开发烧录时自动补充默认 Wi-Fi 和城市配置，可以临时取消下面这行注释：
 
 ```ini
 -D DEV_MODE=1
@@ -176,29 +176,29 @@ pio device monitor
 
 启用后，启动时会通过 `DeviceConfigProvider` 应用开发默认配置。当前策略是只为缺失项补默认值，不无条件覆盖已存在的设备配置。
 
-开发默认 Wi-Fi 和城市可复制 [include/dev_config_local.example.h](/Users/yanlei/Projects/c/dida/include/dev_config_local.example.h:1) 为被 Git 忽略的 `include/dev_config_local.h`。如果本地未配置这些值，`DEV_MODE` 会跳过空默认值，设备会进入 SoftAP 配网页。
+开发默认 Wi-Fi 和城市可复制 [include/dev_config_local.example.h](./include/dev_config_local.example.h) 为被 Git 忽略的 `include/dev_config_local.h`。如果本地未配置这些值，`DEV_MODE` 会跳过空默认值，设备会进入 SoftAP 配网页。
 
 首次配网时，设备会显示 `DIDA-xxxx` 热点名、热点密码 `12345678` 和 `192.168.4.1`。手机连接该热点后打开浏览器，填写 Wi-Fi、密码和天气位置即可保存配置。
 
 ### 天气接口
 
-天气数据来自和风天气 API，相关逻辑位于 [src/weather/weather_service.cpp](/Users/yanlei/Projects/c/dida/src/weather/weather_service.cpp:1)。
+天气数据来自和风天气 API，相关逻辑位于 [src/weather/weather_service.cpp](./src/weather/weather_service.cpp)。
 
 当前实现里：
 
 - API Base URL 和 API Key 通过 `QWEATHER_API_BASE_URL` / `QWEATHER_API_KEY` 配置
 - 实时天气和 7 日天气使用城市 `location_id`
 - 实时空气质量使用城市查询得到的经纬度
-- 本地开发可复制 [include/weather_config_local.example.h](/Users/yanlei/Projects/c/dida/include/weather_config_local.example.h:1) 为被 Git 忽略的 `include/weather_config_local.h`
+- 本地开发可复制 [include/weather_config_local.example.h](./include/weather_config_local.example.h) 为被 Git 忽略的 `include/weather_config_local.h`
 - 返回内容会先解压，再用 `ArduinoJson` 解析
 
 如果没有配置天气接口，固件仍可编译，天气同步会进入失败状态并在串口输出配置缺失提示。
 
 ## 字体说明
 
-LVGL 默认 Montserrat 字体不覆盖中文。项目当前使用 [src/sources/font/ui_zh_20.c](/Users/yanlei/Projects/c/dida/src/sources/font/ui_zh_20.c:1) 作为中文 UI 小字库。
+LVGL 默认 Montserrat 字体不覆盖中文。项目当前使用 [src/sources/font/ui_zh_20.c](./src/sources/font/ui_zh_20.c) 作为中文 UI 小字库。
 
-新增静态中文文案时，需要同步更新字库字符表并重新生成字体。生成命令记录在 [src/sources/font/font_convert.md](/Users/yanlei/Projects/c/dida/src/sources/font/font_convert.md:1)。
+新增静态中文文案时，需要同步更新字库字符表并重新生成字体。生成命令记录在 [src/sources/font/font_convert.md](./src/sources/font/font_convert.md)。
 
 ## 当前状态
 
@@ -218,8 +218,8 @@ LVGL 默认 Montserrat 字体不覆盖中文。项目当前使用 [src/sources/f
 
 建议先看文档导航：
 
-- [docs/README.md](/Users/yanlei/Projects/c/dida/docs/README.md:1)
-- [docs/硬件适配说明.md](/Users/yanlei/Projects/c/dida/docs/硬件适配说明.md:1)
-- [docs/当前实现状态.md](/Users/yanlei/Projects/c/dida/docs/当前实现状态.md:1)
+- [docs/README.md](./docs/README.md)
+- [docs/硬件适配说明.md](./docs/硬件适配说明.md)
+- [docs/当前实现状态.md](./docs/当前实现状态.md)
 
 当前实际行为仍应以 `src/` 下代码为准。
