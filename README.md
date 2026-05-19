@@ -143,6 +143,27 @@ pio run -t upload
 pio device monitor
 ```
 
+### VS Code + clangd
+
+这个项目当前使用 `PlatformIO + Arduino + ESP32-C3` 交叉工具链。仅生成 `compile_commands.json` 还不够，`clangd` 还需要显式查询 `riscv32-esp-elf-g++` 才能正确解析部分系统头文件。
+
+建议初始化步骤：
+
+1. 先执行一次：
+
+```bash
+pio run -t compiledb
+```
+
+2. 让 VS Code 使用项目内的 [scripts/clangd-wrapper.sh](./scripts/clangd-wrapper.sh) 启动 `clangd`。
+
+当前项目会通过 `.vscode/settings.json` 自动配置 `clangd.path`，wrapper 内部已经包含 `--query-driver`。
+
+说明：
+
+- `clangd.path` 由项目内 wrapper 接管
+- 如果更新了 PlatformIO 依赖、工具链或 `platformio.ini`，建议重新执行一次 `pio run -t compiledb`
+
 当前默认环境定义在 [platformio.ini](./platformio.ini)：
 
 - `platform = espressif32@6.6.0`

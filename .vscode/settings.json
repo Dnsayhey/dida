@@ -1,8 +1,4 @@
 {
-    // clangd config
-    "clangd.path": "/opt/homebrew/opt/llvm/bin/clangd",
-    "clangd.arguments": [
-        "--query-driver=/Users/yanlei/.platformio/packages/toolchain-riscv32-esp/bin/riscv32-esp-elf-g++"
-    ],
-    "editor.formatOnSave": true,
+  "editor.formatOnSave": true,
+  "clangd.path": "${workspaceFolder}/scripts/clangd-wrapper.sh"
 }
