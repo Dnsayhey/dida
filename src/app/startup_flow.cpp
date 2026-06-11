@@ -6,6 +6,9 @@
 #include "pages/page_manager.h"
 
 void StartupFlow::run(DisplayDevice& displayDevice, PageManager& pageManager) {
+  // 启动时只调用一次 configTime，让 lwip 自动管理后续同步
+  configTime(8 * 3600, 0, "ntp5.aliyun.com");
+
   DeviceConfigSnapshot configSnapshot =
       connectToWifiWithProvisioning(displayDevice, pageManager);
 

@@ -9,9 +9,6 @@ void WeatherTaskRegistrar::registerTasks(const String& locationId,
                                          const String& longitude,
                                          WeatherDataSync& weatherDataSync) {
   TaskManager::getInstance().addTask(
-      []() { configTime(8 * 3600, 0, "ntp5.aliyun.com"); },
-      BoardConfig::NTP_SYNC_INTERVAL_MS, "ConfigTimeTask", true);
-  TaskManager::getInstance().addTask(
       [locationId, &weatherDataSync]() {
         weatherDataSync.syncCurrentConditions(locationId);
       },
